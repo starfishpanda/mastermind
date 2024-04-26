@@ -1,3 +1,6 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import apiRouter from './routes/apiRoutes';
@@ -12,7 +15,7 @@ const app: Express = express();
 app.use(express.json());
 app.use(express.urlencoded( { extended: true }));
 const MODE = process.env.NODE_ENV || 'development';
-const HOST = 'http://localhost:3000';
+const HOST = 'localhost';
 const PORT = 3000;
 const SESSION_SECRET = process.env.SESSION_SECRET || '';
 const URI = process.env.DATABASE_URI || 'mongodb://localhost:27017';
@@ -83,9 +86,20 @@ app.use(
 app.use('/api', apiRouter); // use a router for api routes
 
 startServer();
+// For serving index.html in production
+// app.use('/client', express.static(path.join(__dirname, '../../dist/client')));
+// app.get('*', (req: Request, res: Response) => {
+//   res.sendFile(path.join(__dirname, '../../dist/client/index.html'));
+// });
+
+// Check server working
+// app.get('/', (req, res) => {
+//   res.send('Hello, world!');
+// });
+
 
 // global error handler
-app.use((err: any, req: Request, res: Response) => {
+app.use((err: any, req: Request, res: Response, next: NextFunction): void => {
   const statusCode = err.status || 500;
   const errorMessage = err.message || 'An unexpected error occurred.';
   // console.log(`Status: ${statusCode}, Message: ${errorMessage}, Route: ${req.path}, Method: ${req.method}`)

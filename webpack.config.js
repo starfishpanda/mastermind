@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 module.exports = {
   entry: './src/client/index.tsx',
@@ -30,7 +31,8 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/client/index.html'
-    })
+    }),
+    new ForkTsCheckerWebpackPlugin(),
   ],
   devtool: 'inline-source-map',
   // Live hot reloading for development
@@ -38,8 +40,13 @@ module.exports = {
     static: {
       directory: path.join(__dirname, 'dist/client')
     },
-    proxy: {
-      '/api': 'http://localhost:3000'
-    }
+    historyApiFallback: true,
+    proxy: [{
+      context: ['/api'],
+        target: 'http://localhost:3000',
+        secure: false,
+        changeOrigin: true,
+      
+    }]
   }
 };
