@@ -1,0 +1,1 @@
+// Utility function to return correct number of digits and correct number of positions

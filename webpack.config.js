@@ -32,13 +32,17 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './src/client/index.html'
     }),
+
     new ForkTsCheckerWebpackPlugin(),
   ],
   devtool: 'inline-source-map',
   // Live hot reloading for development
   devServer: {
+    port: 8081,
+    hot: true,
     static: {
-      directory: path.join(__dirname, 'dist/client')
+      // directory: path.join(__dirname, 'dist/client')
+      publicPath: '/',
     },
     historyApiFallback: true,
     proxy: [{

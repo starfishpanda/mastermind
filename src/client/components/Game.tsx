@@ -1,5 +1,7 @@
 import {useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
 
 
 const Game = () => {
@@ -16,8 +18,8 @@ const Game = () => {
     const fetchRandomNumbers = async () => {
 
       try{
-        const response = await fetch('/api/get-random-numbers')
-        const randomNumbersArray = await response.json();
+        const response = await axios.get('/api/get-random-numbers')
+        const randomNumbersArray = response.data;
         setAnswer(randomNumbersArray);
       } catch (error){
         console.error('An error occurred fetching random numbers')
@@ -26,15 +28,24 @@ const Game = () => {
     };
 
     fetchRandomNumbers();
-  });
+    
+  }, []);
+
+  useEffect(() => {
+    console.log("This is the random number fetched",answer);
+  },[answer])
 
   const checkGuess = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
+    // If numbers match, return Win
     if (guess === answer.join('')){
       navigate('/end-game', {
-        state: {endgame: true}
+        state: {endResult: true}
       });
+    }
+    // Check for number of correct digits and positions
+    else {
+
     }
 
   };
