@@ -14,7 +14,7 @@ const rootDiv = document.getElementById('root')!;
 const root = createRoot(rootDiv);
 
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <RouterProvider router={router}/>
-  </React.StrictMode>
+  // </React.StrictMode>
 );
