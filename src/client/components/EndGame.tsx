@@ -5,7 +5,7 @@ const EndGame = () => {
   const { endResult } = location.state || {};
   return(
     <>
-      <h1>{endResult ? 'Congratulations, you won!' : 'Sorry, try again'}</h1>
+      <h1>{endResult ? 'Congratulations, you won! Please go back to play again' : 'Sorry, try again. Please go back to play again.'}</h1>
     </>
   )
 };

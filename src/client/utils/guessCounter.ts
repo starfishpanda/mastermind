@@ -6,18 +6,33 @@ const guessCounter = (guess: string,answer: number[]) => {
     digitsCorrect: 0,
     positionsCorrect: 0
   };
+  // Create frequency hash of numbers in answer
+  const freqObj: {[key: number]: number} = {};
+  answer.forEach((num: number) =>{
+    if (freqObj[num] !== undefined) freqObj[num]++;
+    else {
+      freqObj[num] = 1;
+    }
+  })
+  
+  // Check for correct digits in correct position
   for (let i = 0; i < guess.length; i++ ){
     const guessDigit: number = parseInt(guess[i]);
-    if (guessDigit === answer[i]){
+    if (guessDigit === answer[i] && freqObj[guessDigit] > 0){
+      freqObj[guessDigit]--;
       guessMetrics.digitsCorrect++;
       guessMetrics.positionsCorrect++;
     } 
-    else if (answer.includes(guessDigit)){
+    // Check for correct digit but not correct position
+    else if (freqObj[guessDigit] && freqObj[guessDigit] > 0){
+      freqObj[guessDigit]--;
       guessMetrics.digitsCorrect++;
     }
+    // console.log(freqObj);
+    // console.log('digits correct', guessMetrics.digitsCorrect)
+    // console.log('positions correct', guessMetrics.positionsCorrect)
   }
-  // console.log(guessMetrics.digitsCorrect)
-  // console.log(guessMetrics.positionsCorrect)
+
   return guessMetrics;
 };
 
