@@ -76,8 +76,8 @@ app.use(
     store: MongoStore.create({ mongoUrl: process.env.DATABASE_URI }),
     cookie: {
       httpOnly: true,
-      secure: false,
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      secure: false, // True for production environment
+      maxAge: 24 * 60 * 60 * 1000, // Cookie expires after 24 hours
     },
   })
 );
@@ -86,10 +86,17 @@ app.use(
 app.use('/api', apiRouter); // use a router for api routes
 
 startServer();
+
 // For serving index.html in production
 // app.use('/client', express.static(path.join(__dirname, '../../dist/client')));
 // app.get('*', (req: Request, res: Response) => {
 //   res.sendFile(path.join(__dirname, '../../dist/client/index.html'));
+// });
+
+// Server-side catch-all
+// app.get('*', (req: Request, res: Response) => {
+//   res.sendFile(path.join(__dirname, 'path_to_your_index.html'));
+//     res.status(404).send('Page not found');
 // });
 
 // Check server working

@@ -2,8 +2,9 @@ import {useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import guessCounter from '../utils/guessCounter';
-import { GuessHistoryType } from '../types/types';
+import { GuessHistoryType } from '../types/GuessHistoryType';
 import { GuessHistory } from './GuessHistory'
+import { showLoginSuccessToast, showLoginUnsuccessfulToast, showLogoutSuccessToast} from '../utils/toasts';
 
 
 
@@ -19,11 +20,44 @@ const Game = () => {
   const [answerChecked, setAnswerChecked] = useState<boolean>(false);
   const [showResults, setShowResults] = useState<boolean>(false);
   const [noGuessesLeft, setNoGuessesLeft] = useState<boolean>(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   // const [resultsMessage, setResultsMessage] = useState('');
   const [allIncorrect, setAllIncorrect] = useState<boolean>(false);
 
   const navigate = useNavigate();
+  const toggleLoginModal = () => setIsLoginModalOpen(!isLoginModalOpen);
 
+  // Sets login state and login modal
+  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const email = form.elements.namedItem('email') as HTMLInputElement;
+    const password = form.elements.namedItem('password') as HTMLInputElement;
+    try {
+        const response = await axios.post('/api/user-login',{
+        email: email.value,
+        password: password.value
+      });
+      // Check if the login was successful
+      if (response.status === 200 || response.status === 201) {
+        // Assuming the server sends back a specific status for a successful login
+        setIsLoggedIn(true);
+        setIsLoginModalOpen(false);
+        showLoginSuccessToast();
+        console.log('Logged in successfully!');
+      } 
+    } catch (error){
+      showLoginUnsuccessfulToast();
+      console.error('An error occurred logging in.');
+    }
+  };
+
+  const handleLogout = async () => {
+    setIsLoggedIn(false);
+    showLogoutSuccessToast();
+  };
   // Random numbers are fetched on page load
   useEffect(()=> {
 
@@ -108,6 +142,46 @@ const Game = () => {
     
     <>
     <h1>Mastermind: Can you Read the Computer's Mind? 🤖</h1>
+    {/* Login and Logout Buttons */}
+    { !isLoggedIn && (
+      <button style={{ position: 'absolute', top: 20, right: 20 }} onClick={toggleLoginModal}>
+      Login
+    </button>
+    )}
+
+    { isLoggedIn && (
+      <button style={{ position: 'absolute', top: 20, right: 20 }} onClick={handleLogout}>
+        Logout
+      </button>
+    )}
+    
+      {/* Login Modal */}
+      {isLoginModalOpen && (
+        <div style={{
+          position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+          backgroundColor: 'white', padding: '20px', zIndex: 1000
+        }}>
+          <form onSubmit={handleLogin}>
+            <label>
+              Email:
+              <input type="email" name="email" required />
+            </label>
+            <label>
+              Password:
+              <input type="password" name="password" required />
+            </label>
+            <button type="submit">Log In</button>
+            <button type="button" onClick={toggleLoginModal}>Close</button>
+          </form>
+        </div>
+      )}
+
+      <div style={{
+        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+        backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 999
+      }} onClick={toggleLoginModal} hidden={!isLoginModalOpen} />
+      
+    {/* Game Contents */}
     <form onSubmit={checkGuess}>
       <label htmlFor="numberInput">Enter a 4-digit Number:</label>
         <input
