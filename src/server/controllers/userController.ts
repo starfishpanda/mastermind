@@ -38,6 +38,64 @@ const userController = {
     }
 
   },
+
+  logoutUser: async (req: Request, res: Response, next: NextFunction) => {
+    req.session.destroy((error) => {
+      if (error){
+        console.error("There was an error logging out", error)
+        res.status(500).json({ message: "Unable to logout" });
+      }
+      res.clearCookie('connect.sid');
+      return res.status(200).json({ message: "Logout Successful"})
+    })
+  },
+
+  isAuthenticated: async (req: Request, res: Response, next: NextFunction) => {
+    if ((req.session as UserSession).userId){
+      return next();
+    } else{
+      res.status(401).json( { message: "User is not authenticated"});
+    }
+  },
+
+  deleteAccount: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      // Check for the account to delete through sessions ID
+      const userId = (req.session as UserSession).userId;
+      if (!userId){
+        console.error("userController.deleteAccount: There is no userId")
+        res.status(404).json({ message: "User not found"})
+      }
+      const deletedUser = await UserModel.findByIdAndDelete(userId);
+      
+      if (!deletedUser){
+        console.error("userController.deleteAccount: No user found with that ID")
+        res.status(404).json({ message: "No user found with that ID"})
+      } else{
+        // Destroy the session and delete associated cookie after deleting account
+        req.session.destroy((error) => {
+          if (error){
+            console.error("userController.deleteAccount: There was an error destroying the account session", error)
+            res.status(500).json({ message: "Unable to destroy session" });
+          }
+          res.clearCookie('connect.sid');
+          return res.status(200).json({ message: "User account successfully deleted"})
+        })
+      }
+    } catch(error){
+      console.error("userController.deleteAccount: There was an error deleting the account");
+      return next(error);
+    }
+    
+  },
+
+  updatePassword: async (req: Request, res: Response, next: NextFunction) => {
+
+  },
+
+  getGameRecord: async (req: Request, res: Response, next: NextFunction) => {
+
+  },
 };
 
 export default userController;

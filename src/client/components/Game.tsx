@@ -5,14 +5,14 @@ import guessCounter from '../utils/guessCounter';
 import { GuessHistoryType } from '../types/GuessHistoryType';
 import { GuessHistory } from './GuessHistory'
 import { showLoginSuccessToast, showLoginUnsuccessfulToast, showLogoutSuccessToast} from '../utils/toasts';
-
+import { z } from 'zod';
 
 
 const Game = () => {
   const maxGuesses = 10;
   const [answer,setAnswer] = useState<number[]>([]); // The random number fetched from the API
   const [guess, setGuess] = useState<string>(''); // The user submitted guess
-  const [localGuess, setLocalGuess] = useState<string>('');
+  const [localGuess, setLocalGuess] = useState<string>(''); // Setting the guess to be displayed in results so it doesn't change as user types new guess
   const [guessesCount, setGuessesCount] = useState(0); // Number of guesses left before the game ends
   const [digitsCorrect, setDigitsCorrect] = useState<number>(); // Number of correct digits in their guess
   const [positionsCorrect, setPositionsCorrect] = useState<number>(); // Number of correct digits in the correct position
@@ -30,16 +30,28 @@ const Game = () => {
   const toggleLoginModal = () => setIsLoginModalOpen(!isLoginModalOpen);
 
   // Sets login state and login modal
+  const loginSchema = z.object({
+    email: z.string().email({ message: "Invalid email address" }),
+    password: z.string().min(8, { message: "Password must be at least 8 characters"})
+  })
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
     const email = form.elements.namedItem('email') as HTMLInputElement;
     const password = form.elements.namedItem('password') as HTMLInputElement;
     try {
-        const response = await axios.post('/api/user-login',{
+      // Validate form using Zod
+      const result = loginSchema.parse({
         email: email.value,
         password: password.value
       });
+
+      // Proceed with API call if Zod validation is successful
+      const response = await axios.post('/api/user-login',{
+        email: email.value,
+        password: password.value
+      });
+
       // Check if the login was successful
       if (response.status === 200 || response.status === 201) {
         // Assuming the server sends back a specific status for a successful login
@@ -54,6 +66,7 @@ const Game = () => {
     }
   };
 
+  // Logs out and shows success toast
   const handleLogout = async () => {
     setIsLoggedIn(false);
     showLogoutSuccessToast();
