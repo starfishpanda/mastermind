@@ -17,6 +17,7 @@ apiRouter.post('/delete-account', userController.isAuthenticated, userController
 // Update Password - isAuthenticated, updatePassword
 
 // Fetch Game Record stats - isAuthenticated, getGameRecord
+apiRouter.get('/get-game-records', userController.isAuthenticated, userController.getGameRecords)
 
 
 

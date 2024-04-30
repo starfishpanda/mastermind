@@ -1,6 +1,15 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Document } from 'mongoose';
 
-const UserSchema = new Schema({
+interface IUser extends Document {
+  email: string;
+  password: string;
+  wins: number;
+  losses: number;
+  favoriteNumber: number;
+
+}
+
+const UserSchema = new Schema<IUser>({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   wins: { type: Number, default: 0},
@@ -9,6 +18,6 @@ const UserSchema = new Schema({
   
 }, { timestamps: true});
 
-const UserModel = model('User', UserSchema);
+const UserModel = model<IUser>('User', UserSchema);
 
 export default UserModel;

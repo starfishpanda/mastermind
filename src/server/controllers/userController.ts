@@ -93,8 +93,33 @@ const userController = {
 
   },
 
-  getGameRecord: async (req: Request, res: Response, next: NextFunction) => {
+  getGameRecords: async (req: Request, res: Response, next: NextFunction) => {
+    interface GameRecord {
+      wins: number;
+      losses: number;
+      favoriteNumber: number;
+    }
+  
+    try{
+      const userId = (req.session as UserSession).userId
+      // Check if the user has a session in place
+      if (!userId){
+        console.error("userController.getGameRecords: There is no userId")
+        return res.status(404).json({ message: "User not found"})
+      }
 
+      const gameRecords = await UserModel.findById(userId).select('wins losses favoriteNumber') as GameRecord;
+      if (!gameRecords){
+        console.error('userController.getGameRecords: No user found with this ID')
+        return res.status(404).json({ message: "No user found with that ID"})
+      }
+      const { wins, losses, favoriteNumber } = gameRecords;
+      return res.status(200).json({ wins, losses, favoriteNumber})
+
+    } catch(error){
+      console.error('userController.getGameRecords: An error occurred getting Game Records')
+      return next(error);
+    }
   },
 };
 
