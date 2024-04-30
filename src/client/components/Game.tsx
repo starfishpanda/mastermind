@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import guessCounter from '../utils/guessCounter';
 import { GuessHistoryType } from '../types/GuessHistoryType';
-import { GuessHistory } from './GuessHistory'
+import GuessHistory from './GuessHistory';
+import Account from './Account';
 import { showLoginSuccessToast, showLoginUnsuccessfulToast, showLogoutSuccessToast} from '../utils/toasts';
 import { z } from 'zod';
+import { useAuth } from '../utils/AuthContext';
 
 
 const Game = () => {
@@ -21,8 +23,8 @@ const Game = () => {
   const [showResults, setShowResults] = useState<boolean>(false);
   const [noGuessesLeft, setNoGuessesLeft] = useState<boolean>(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isLoggedIn, setIsLoggedIn } = useAuth();
   // const [resultsMessage, setResultsMessage] = useState('');
   const [allIncorrect, setAllIncorrect] = useState<boolean>(false);
 
@@ -68,8 +70,14 @@ const Game = () => {
 
   // Logs out and shows success toast
   const handleLogout = async () => {
-    setIsLoggedIn(false);
-    showLogoutSuccessToast();
+    try{
+      const response = await axios.post('/api/user-logout');
+      setIsLoggedIn(false);
+      showLogoutSuccessToast();
+    }catch(error){
+      console.error('An error occurred logging out', error)
+    }
+
   };
   // Random numbers are fetched on page load
   useEffect(()=> {
@@ -157,15 +165,19 @@ const Game = () => {
     <h1>Mastermind: Can you Read the Computer's Mind? 🤖</h1>
     {/* Login and Logout Buttons */}
     { !isLoggedIn && (
-      <button style={{ position: 'absolute', top: 20, right: 20 }} onClick={toggleLoginModal}>
+      <button style={{ position: 'absolute', top: 20, right: 100 }} onClick={toggleLoginModal}>
       Login
-    </button>
+      </button>
     )}
 
     { isLoggedIn && (
-      <button style={{ position: 'absolute', top: 20, right: 20 }} onClick={handleLogout}>
+      <>
+        <button style={{ position: 'absolute', top: 20, right: 200 }} onClick={() => navigate('/account')}>Account</button>
+        <button style={{ position: 'absolute', top: 20, right: 100 }} onClick={handleLogout}>
         Logout
-      </button>
+        </button>
+      </>
+
     )}
     
       {/* Login Modal */}

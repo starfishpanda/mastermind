@@ -37,3 +37,15 @@ export function showLoginUnsuccessfulToast() {
     progress: undefined,
   });
 }
+
+export function showDeleteAccountSuccessToast() {
+  toast.success("Account deleted successfully!", {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
+}

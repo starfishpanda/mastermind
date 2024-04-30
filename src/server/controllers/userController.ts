@@ -5,6 +5,7 @@ import UserSession from '../types/UserSession'
 
 
 const userController = {
+  // Create new user or log into current user
   upsertUser: async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
     if (!email || !password) {

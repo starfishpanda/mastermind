@@ -10,10 +10,10 @@ apiRouter.get('/get-random-numbers', randomNumberController.getRandomNumbers);
 apiRouter.post('/user-login', userController.upsertUser);
 
 // Logout user
-apiRouter.post('/user-logout', userController.logoutUser);
+apiRouter.post('/user-logout', userController.isAuthenticated, userController.logoutUser);
 
 // Delete Account - add authentication check and delete controller
-apiRouter.post('/delete-account', userController.isAuthenticated, userController.deleteAccount);
+apiRouter.delete('/delete-account', userController.isAuthenticated, userController.deleteAccount);
 // Update Password - isAuthenticated, updatePassword
 
 // Fetch Game Record stats - isAuthenticated, getGameRecord

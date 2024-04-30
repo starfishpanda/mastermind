@@ -5,7 +5,7 @@ interface GuessHistoryProps {
   guessHistory: [string, number, number][];
 }
 
-export const GuessHistory = ({ guessHistory }: GuessHistoryProps) => {
+const GuessHistory = ({ guessHistory }: GuessHistoryProps) => {
 
   return (
     <div>
@@ -23,3 +23,5 @@ export const GuessHistory = ({ guessHistory }: GuessHistoryProps) => {
     
   )
 };
+
+export default GuessHistory;

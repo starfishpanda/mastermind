@@ -16,7 +16,7 @@ const GameRecords = () => {
         setFavoriteNumber(response.data.favoriteNumber);
         return response.data;
       } catch(error){
-        console.error("failled to fetch game records", error);
+        console.error("Failed to fetch game records", error);
       }
     };
     fetchGameRecords();
@@ -26,9 +26,9 @@ const GameRecords = () => {
     <>
       <h3>Game Records</h3>
         <div>
-          <strong>Wins:</strong>{wins}
-          <strong>Losses:</strong>{losses}
-          <strong>Favorite Number:</strong>{favoriteNumber}
+          <strong>Wins:</strong>{wins}<br />
+          <strong>Losses:</strong>{losses}<br />
+          <strong>Favorite Number:</strong>{favoriteNumber}<br />
         </div>
     </>
     

@@ -14,7 +14,7 @@ const UserSchema = new Schema<IUser>({
   password: { type: String, required: true },
   wins: { type: Number, default: 0},
   losses: { type: Number, default: 0},
-  favoriteNumber: { type: Number},
+  favoriteNumber: { type: Number, default: null},
   
 }, { timestamps: true});
 
