@@ -162,7 +162,7 @@ const Game = () => {
   return(
     
     <>
-    <h1>Mastermind: Can you Read the Computer's Mind? 🤖</h1>
+    <h1>Mastermind: Can you Read the Computer's RAM? 🤖</h1>
     {/* Login and Logout Buttons */}
     { !isLoggedIn && (
       <button style={{ position: 'absolute', top: 35, right: 100 }} onClick={toggleLoginModal}>

@@ -2,14 +2,15 @@
   "name": "mastermind",
   "version": "1.0.0",
   "description": "LinkedIn REACH Take Home Challenge",
-  "main": "dist/server/server.js",
+  "main": "dist/server.js",
   "scripts": {
-    "test": "jest",
+    "test": "cross-env NODE_ENV=testing jest",
     "build:client": "webpack --mode production",
     "build:server": "npm run clean && tsc -p tsconfig.node.json",
     "build": "npm run build:client && npm run build:server",
     "dev": "concurrently \"webpack serve --mode development\" \"cross-env NODE_ENV=development npx nodemon dist/server.js\"",
-    "clean": "rimraf dist/server"
+    "clean": "rimraf dist/server",
+    "start": "cross-env NODE_ENV=production node dist/server.js"
   },
   "keywords": [],
   "author": "Philip Brown",

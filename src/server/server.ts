@@ -85,19 +85,22 @@ app.use(
 
 app.use('/api', apiRouter); // use a router for api routes
 
-startServer();
-
-// For serving index.html in production
-// app.use('/client', express.static(path.join(__dirname, '../../dist/client')));
-// app.get('*', (req: Request, res: Response) => {
-//   res.sendFile(path.join(__dirname, '../../dist/client/index.html'));
-// });
-
-// Check server working
-// app.get('/', (req, res) => {
-//   res.send('Hello, world!');
-// });
-
+if (MODE === 'production'){
+  startServer();
+  app.use(express.static(path.join(__dirname, 'dist/client')));
+  app.get('*', (req: Request, res: Response) => {
+    res.sendFile(path.join(__dirname, 'client/index.html'));
+  });
+}
+else if (MODE === 'testing'){
+  // Jest will start server in test file
+  app.get('/', (req: Request, res: Response) => {
+    res.send('Mastermind Testing');
+  });
+} else {
+  // Webpack serves the static files for development hot reloading
+  startServer();
+}
 
 // global error handler
 app.use((err: any, req: Request, res: Response, next: NextFunction): void => {
