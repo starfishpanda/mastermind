@@ -41,7 +41,7 @@ module.exports = {
     port: 8081,
     hot: true,
     static: {
-      // directory: path.join(__dirname, 'dist/client')
+      // directory: path.join(__dirname, 'dist/client'),
       publicPath: '/',
     },
     historyApiFallback: true,
