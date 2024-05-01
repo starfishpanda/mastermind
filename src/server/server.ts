@@ -15,8 +15,8 @@ const app: Express = express();
 app.use(express.json());
 app.use(express.urlencoded( { extended: true }));
 const MODE = process.env.NODE_ENV || 'development';
-const HOST = 'localhost';
-const PORT = 3000;
+const HOST = process.env.HOST || 'localhost';
+const PORT = Number(process.env.PORT) || 3000;
 const SESSION_SECRET = process.env.SESSION_SECRET || '';
 const URI = process.env.DATABASE_URI || 'mongodb://localhost:27017';
 
@@ -76,8 +76,8 @@ app.use(
     store: MongoStore.create({ mongoUrl: process.env.DATABASE_URI }),
     cookie: {
       httpOnly: true,
-      secure: false, // True for production environment
-      maxAge: 24 * 60 * 60 * 1000, // Cookie expires after 24 hours
+      secure: MODE === 'production', // True for production environment
+      maxAge: 24 * 60 * 60 * 1000, // Cookie expires after 24 hours (24 hours, 60 minutes, 60 seconds, 1000 milliseconds)
     },
   })
 );
@@ -93,12 +93,6 @@ startServer();
 //   res.sendFile(path.join(__dirname, '../../dist/client/index.html'));
 // });
 
-// Server-side catch-all
-// app.get('*', (req: Request, res: Response) => {
-//   res.sendFile(path.join(__dirname, 'path_to_your_index.html'));
-//     res.status(404).send('Page not found');
-// });
-
 // Check server working
 // app.get('/', (req, res) => {
 //   res.send('Hello, world!');
@@ -109,8 +103,7 @@ startServer();
 app.use((err: any, req: Request, res: Response, next: NextFunction): void => {
   const statusCode = err.status || 500;
   const errorMessage = err.message || 'An unexpected error occurred.';
-  // console.log(`Status: ${statusCode}, Message: ${errorMessage}, Route: ${req.path}, Method: ${req.method}`)
-
+  console.error(`Status: ${statusCode}, Message: ${errorMessage}, Route: ${req.path}, Method: ${req.method}`)
   res.status(statusCode).json({ message: errorMessage });
 });
 

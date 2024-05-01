@@ -1,14 +1,32 @@
-import {useState, useEffect } from 'react';
+import {useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { z } from 'zod';
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import GameRecords from './GameRecords';
-import { useAuth } from '../utils/AuthContext';
+import AuthContext from '../utils/AuthContext';
 import { showDeleteAccountSuccessToast } from '../utils/toasts'
 
+
 const Account = () => {
-  const { isLoggedIn, setIsLoggedIn } = useAuth();
+  const { isLoggedIn, setIsLoggedIn, 
+          showTimer, setShowTimer, 
+          timeLimit, setTimeLimit, currentTime, 
+          setCurrentTime 
+        } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [dropdownTime, setDropdownTime] = useState((timeLimit/60000).toString());
+  
+  const handleTimeChange = (event: SelectChangeEvent) => {
+    setDropdownTime(event.target.value); // Set time in number of minutes times milliseconds
+    setTimeLimit(Number(event.target.value));
+  };
+
+
     
   
   const handleDeleteAccount = async () => {
@@ -29,7 +47,28 @@ const Account = () => {
       {/* List of Game Records */}
       <GameRecords />
       {/* Delete Account */}
-      <button onClick={handleDeleteAccount}>Delete Account</button>
+      <button style={{marginTop: 10}}onClick={handleDeleteAccount}>Delete Account</button>
+
+      {/* Timer Settings */}
+      <Box sx={{ display: 'flex', justifyContent: 'left', width: '50%', paddingTop: 5}}>
+        <FormControl sx={{ width: '30%' }}>
+          <InputLabel id="time-limit-select-label">Time Limit</InputLabel>
+          <Select
+            labelId="time-limit-select-label"
+            id="time-limit-select"
+            value={dropdownTime}
+            label="Time Limit"
+            onChange={handleTimeChange}
+            
+          >
+            {Array.from({ length: 10 }, (_,i) => (
+              <MenuItem key={i+1} value={i+1}>{i+1} Minutes</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
+
+
       
     </>
     

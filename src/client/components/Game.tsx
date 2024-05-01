@@ -1,4 +1,4 @@
-import {useState, useEffect } from 'react';
+import {useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import guessCounter from '../utils/guessCounter';
@@ -7,7 +7,7 @@ import GuessHistory from './GuessHistory';
 import Account from './Account';
 import { showLoginSuccessToast, showLoginUnsuccessfulToast, showLogoutSuccessToast} from '../utils/toasts';
 import { z } from 'zod';
-import { useAuth } from '../utils/AuthContext';
+import AuthContext from '../utils/AuthContext';
 
 
 const Game = () => {
@@ -24,7 +24,7 @@ const Game = () => {
   const [noGuessesLeft, setNoGuessesLeft] = useState<boolean>(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { isLoggedIn, setIsLoggedIn } = useAuth();
+  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
   // const [resultsMessage, setResultsMessage] = useState('');
   const [allIncorrect, setAllIncorrect] = useState<boolean>(false);
 
@@ -165,15 +165,15 @@ const Game = () => {
     <h1>Mastermind: Can you Read the Computer's Mind? 🤖</h1>
     {/* Login and Logout Buttons */}
     { !isLoggedIn && (
-      <button style={{ position: 'absolute', top: 20, right: 100 }} onClick={toggleLoginModal}>
+      <button style={{ position: 'absolute', top: 35, right: 100 }} onClick={toggleLoginModal}>
       Login
       </button>
     )}
 
     { isLoggedIn && (
       <>
-        <button style={{ position: 'absolute', top: 20, right: 200 }} onClick={() => navigate('/account')}>Account</button>
-        <button style={{ position: 'absolute', top: 20, right: 100 }} onClick={handleLogout}>
+        <button style={{ position: 'absolute', top: 35, right: 200 }} onClick={() => navigate('/account')}>Account</button>
+        <button style={{ position: 'absolute', top: 35, right: 100 }} onClick={handleLogout}>
         Logout
         </button>
       </>
