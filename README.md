@@ -13,7 +13,7 @@ Node is a server-side runtime environment for JavaScript, and Node Package Manag
   $ npm -v
 ```
 
-If these don't exist, then you can install Node and npm using Node Version Manager (nvm) which will allow you to set which versions of Node and NPM are used. You can check if your machine has nvm using the following command on macOS:
+If these don't exist, then you can install Node and npm using Node Version Manager (nvm) which will allow you to set which versions of Node and npm are used. You can check if your machine has nvm using the following command on macOS:
 
 ```bash
   $ nvm --version
@@ -89,7 +89,7 @@ DATABASE_URI=
 SESSION_SECRET=
 ```
 
-The `DATABASE_URI` is the URI given for your specific MongoDB instance and is how the application stores user information.  It will be stored securely on your local machine in the .env file. You can create a MongoDB instance on Atlas at this [link](https://www.mongodb.com/products/platform/atlas-database) for free and it will provide a URI for you based on your login information and a secure password you create.
+The `DATABASE_URI` is the URI given for your specific MongoDB instance and is how the application stores user information.  The URI will be stored securely on your local machine in the .env file. You can create a MongoDB instance on Atlas at this [link](https://www.mongodb.com/products/platform/atlas-database) for free and it will provide a URI for you based on your login information and a secure password you create.
 
 The `SESSION_SECRET` is a secret alphanumeric passkey which will be used to create an express session ID on your MongoDB instance. It will be stored securely on your local machine in the .env file.
 
@@ -149,11 +149,11 @@ $ npm test
   - Logging with `Winston` or `Morgan`
   - Load testing with `JMeter`, and performance monitoring
   - Containerize project with `Docker` and deploy on a cloud service like Google Cloud Platform (GCP) or Amazon Web Services (AWS)
-  - CI/CD pipeline with `GitLab` or `GitHub Actions`
+  - CI/CD pipeline with `GitLab` or `GitHub Actions` for continuous development, testing and deployment to production
   - Using more context for global state management instead of local state
 
   ### Development Process and Lessons Learned
   Please check the the [Development Process and Lessons Learned Doc](/process-lessons.md) for more details.
 
   ### Acknowledgements
-  I want to express my gratitude to the LinkedIn REACH program for this opportunity, and my appreciation to the interviewers for taking time out of their schedules to review this project. It has been very rewarding to reflect on my coding journey, and sprint through this open-ended project. I'm looking forward to building on top of it in the future, and leveraging what I have learned for other passion projects.
+  I want to express my gratitude to the LinkedIn REACH program for this opportunity, and my appreciation to the interviewers for taking time out of their schedules to review this project. It has been very rewarding to reflect on my coding journey, and sprint through this open-ended project. I'm looking forward to building on top of it in the future, and leveraging what I have learned for new passion projects.
