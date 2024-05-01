@@ -93,14 +93,67 @@ The `DATABASE_URI` is the URI given for your specific MongoDB instance and is ho
 
 The `SESSION_SECRET` is a secret alphanumeric passkey which will be used to create an express session ID on your MongoDB instance. It will be stored securely on your local machine in the .env file.
 
+In order to ensure the the webpack development server starts on port 8081 and proxies port 3000, make sure that they are clear of any processes. For macOS, run these commands to check what processes are running on ports 3000 and 8081, and end any processes:
+```bash
+$ sudo lsof -i :3000
+# Replace PID with the actual process you found
+$ sudo kill -9 PID
+```
+
+For Windows:
+```bash
+$ netstat -ano | findstr :3000
+# Replace PID with the actual process you found
+taskkill /PID PID /F
+```
+
 Once the environment is setup, you can start playing by running:
 ```bash
-npm run dev
+$ npm run dev
 ```
 And navigating to the URL `http://localhost:8081/` in your browser.
 
 ## Running Tests
-Some tests for fetching numbers and server routes, which are still a work in progress, can be run using:
+Some tests located in `__tests__` for fetching numbers and RESTful API server routes, which are still a work in progress, can be run using:
 ```bash
-npm test
+$ npm test
 ```
+
+## Project Requirements and Stretch Features
+
+### Base Features
+- Player can input a 4-digit number
+- Immediate feedback on the number guessed in the form of:
+  - Number of digits correct
+  - Number of digits in the correct position
+  - Number of guesses left
+- View history of guesses and their result in order of most recent to oldest
+- User is congratulated when they win, and encouraged to try again if they use up all 10 guesses
+
+### Stretch Features
+- User creation, login, logout and account deletion via MongoDB
+  - Toasts to notify user of success or failure
+- User authentication with session ID
+- Ability to play without creating an account
+- Timer limit setting to increase the difficulty
+- Store user records, like wins, losses and most frequently guessed digits
+- Unit tests with `Jest` for number fetching API and server's RESTful API using `Express`
+
+## Looking Ahead
+- Game Features
+  - Graph of wins and losses over time, and digit frequencies
+  - Utilize users accounts to create multi-player games so friends can put their heads together to come up with guesses
+  - Ability to update password
+- Development Tools
+  - Adding more unit tests for server routes, `React` and end-to-end testing
+  - Logging with `Winston` or `Morgan`
+  - Load testing with `JMeter`, and performance monitoring
+  - Containerize project with `Docker` and deploy on a cloud service like Google Cloud Platform (GCP) or Amazon Web Services (AWS)
+  - CI/CD pipeline with `GitLab` or `GitHub Actions`
+  - Using more context for global state management instead of local state
+
+  ### Development Process and Lessons Learned
+  Please check the the [Development Process and Lessons Learned Doc](/process-lessons.md) for more details.
+
+  ### Acknowledgements
+  I want to express my gratitude to the LinkedIn REACH program for this opportunity, and my appreciation to the interviewers for taking time out of their schedules to review this project. It has been very rewarding to reflect on my coding journey, and sprint through this open-ended project. I'm looking forward to building on top of it in the future, and leveraging what I have learned for other passion projects.
