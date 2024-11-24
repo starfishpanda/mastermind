@@ -1,0 +1,1 @@
+export type GuessHistoryType = [string,number,number][];
