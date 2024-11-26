@@ -15,7 +15,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const rootDiv = document.getElementById('root') as HTMLElement;
 const root = createRoot(rootDiv);
-
+console.log(rootDiv);
 root.render(
   <React.StrictMode>
     <BrowserRouter>

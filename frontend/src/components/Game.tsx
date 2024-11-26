@@ -4,7 +4,6 @@ import axios from 'axios';
 import guessCounter from '../utils/guessCounter';
 import { GuessHistoryType } from '../types/GuessHistoryType';
 import GuessHistory from './GuessHistory';
-import Account from './Account';
 import { showLoginSuccessToast, showLoginUnsuccessfulToast, showLogoutSuccessToast} from '../utils/toasts';
 import { z } from 'zod';
 import AuthContext from '../utils/AuthContext';
@@ -88,6 +87,7 @@ const Game = () => {
         const response = await axios.get('/api/get-random-numbers')
         const randomNumbersArray: number[] = response.data;
         setAnswer(randomNumbersArray);
+        console.log("random numbers array",randomNumbersArray);
       } catch (error){
         console.error('An error occurred fetching random numbers')
       }

@@ -15,6 +15,10 @@ const App = () => {
         <Route path="account" element={<Account />}/>
         <Route path="*" element={<NotFound />} />
       </Routes>
+      {/* <div>
+        <h1>App is rendering.</h1>
+        <Game/>
+      </div> */}
     </AuthProvider>
     
   );
