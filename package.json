@@ -26,6 +26,8 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.0.1",
     "react-toastify": "^10.0.6",
-    "ts-node-dev": "^2.0.0"
+    "shadcn-ui": "^0.2.3",
+    "ts-node-dev": "^2.0.0",
+    "zod": "^3.23.8"
   }
 }
