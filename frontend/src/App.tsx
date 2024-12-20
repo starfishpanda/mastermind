@@ -1,4 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
+import Home from './components/Home'
 import Game from './components/Game';
 import NotFound from './components/NotFound';
 import EndGame from './components/EndGame';
@@ -10,7 +11,8 @@ const App = () => {
   return (
     <AuthProvider>
       <Routes>
-        <Route path="/" element={<Game />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/play" element={<Game />} />
         <Route path="end-game" element={<EndGame />}/>
         <Route path="account" element={<Account />}/>
         <Route path="*" element={<NotFound />} />

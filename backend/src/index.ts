@@ -3,7 +3,7 @@ dotenv.config();
 
 import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import apiRouter from './routes/apiRoutes';
+import apiRouter from './routes/apiRoutes.js';
 import mongoose from 'mongoose';
 import path from 'path';
 import http from 'http';

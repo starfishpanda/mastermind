@@ -10,8 +10,6 @@ import AuthContext from '../utils/AuthContext';
 import { Input } from './ui/input'
 import { Button } from './ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from './ui/card'
-import { Bot } from 'lucide-react'
-
 
 
 const Game = () => {
@@ -21,17 +19,15 @@ const Game = () => {
   const [guessesCount, setGuessesCount] = useState(0); // Number of guesses left before the game ends
   const [guessHistory, setGuessHistory] = useState<GuessType[]>([]);
   const [targetNumberChecked, setTargetNumberChecked] = useState<boolean>(false);
-  const [showResults, setShowResults] = useState<boolean>(false);
   const [gameOver, setGameOver] = useState(false)
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [allIncorrect, setAllIncorrect] = useState<boolean>(false);
 
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
 
 
   const navigate = useNavigate();
   const toggleLoginModal = () => setIsLoginModalOpen(!isLoginModalOpen);
-
+  const closeLoginModal = () => setIsLoginModalOpen(false);
   // Sets login state and login modal
   const loginSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
@@ -60,7 +56,7 @@ const Game = () => {
         // Assuming the server sends back a specific status for a successful login
         setIsLoggedIn(true);
         setIsLoginModalOpen(false);
-        showLoginSuccessToast();
+        // showLoginSuccessToast();
         console.log('Logged in successfully!');
       } 
     } catch (error){
@@ -112,9 +108,6 @@ const Game = () => {
       return
     }
     setTargetNumberChecked(!targetNumberChecked);
-    setAllIncorrect(false);
-
-    setShowResults(false);
 
     const { digitsCorrect, positionsCorrect } = guessCounter(currentGuess,targetNumber);
 
@@ -123,203 +116,141 @@ const Game = () => {
       digitsCorrect,
       positionsCorrect,
     }
-  
-    setGuessesCount(prevGuessesCount => prevGuessesCount + 1);
-    setCurrentGuess('')
-    setGuessHistory(prevGuesses => [newGuess, ...prevGuesses]);
-    
     // ** CHANGE THIS TO A MODAL INSTEAD OF PAGE NAVIGATION **
     // If numbers match, return Win
     if (newGuess.number === targetNumber.join('')){
       navigate('/end-game', {
         state: {endResult: true}
-        
       });
-    } else{
-      setShowResults(true);
+      return;
     }
+  
+    setGuessesCount(prevGuessesCount => prevGuessesCount + 1);
+    setCurrentGuess('')
+    setGuessHistory(prevGuesses => [newGuess, ...prevGuesses]);
+    
+ 
   };
 
+  // End Game - change maxGuesses to be stateful with useContext in case user wants to change it in settings
+  useEffect(() => {
+    if (guessesCount >= maxGuesses){
+      navigate('/end-game', {
+        state: {endResult: false}
+      });
+    }
+  },[guessesCount, maxGuesses])
+
   return (
-    <>
-    {/* Login and Logout Buttons */}
-    { !isLoggedIn && (
-      <button style={{ position: 'absolute', top: 35, right: 100 }} onClick={toggleLoginModal}>
-      Login
-      </button>
-    )}
+  <div className="min-h-screen bg-[#99DDC8] flex items-center justify-center p-4">
+    <div className="bg-[#95BF74] border-4 border-[#556F44] rounded-lg shadow-xl p-8 w-full max-w-2xl">
+      <h1 className="text-3xl font-bold text-center text-[#283F3B] mb-8">Mastermind: Can you Read the Computer&apos;s Mind?</h1>
+      
+      {/* Login/Logout buttons */}
+      <div className="absolute top-4 right-4 space-x-4">
+        {!isLoggedIn ? (
+          <Button onClick={toggleLoginModal} variant="outline" className="bg-[#95BF74] text-[#283F3B] border-[#556F44] hover:bg-[#556F44] hover:text-white">
+            Login
+          </Button>
+        ) : (
+          <>
+            <Button onClick={() => navigate('/account')} variant="outline" className="bg-[#95BF74] text-[#283F3B] border-[#556F44] hover:bg-[#556F44] hover:text-white">
+              Account
+            </Button>
+            <Button onClick={handleLogout} variant="outline" className="bg-[#95BF74] text-[#283F3B] border-[#556F44] hover:bg-[#556F44] hover:text-white">
+              Logout
+            </Button>
+          </>
+        )}
+      </div>
 
-    { isLoggedIn && (
-      <>
-        <button style={{ position: 'absolute', top: 35, right: 200 }} onClick={() => navigate('/account')}>Account</button>
-        <button style={{ position: 'absolute', top: 35, right: 100 }} onClick={handleLogout}>
-        Logout
-        </button>
-      </>
-
-    )}
-    
       {/* Login Modal */}
       {isLoginModalOpen && (
-        <div style={{
-          position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-          backgroundColor: 'white', padding: '20px', zIndex: 1000
-        }}>
-          <form onSubmit={handleLogin}>
-            <label>
-              Email:
-              <input type="email" name="email" required />
-            </label>
-            <label>
-              Password:
-              <input type="password" name="password" required />
-            </label>
-            <button type="submit">Log In</button>
-            <button type="button" onClick={toggleLoginModal}>Close</button>
-          </form>
-        </div>
+        <>
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={closeLoginModal}>
+            <Card className="w-full max-w-md bg-[#95BF74] border-[#556F44]" onClick= {(e) => e.stopPropagation()}>
+              <CardHeader>
+                <CardTitle className="text-[#283F3B]">Login</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleLogin} className="space-y-4">
+                  <div className="space-y-2">
+                    <label htmlFor="email" className="text-[#283F3B]">Email:</label>
+                    <Input type="email" id="email" name="email" required className="bg-white text-[#283F3B] border-[#556F44]" />
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="password" className="text-[#283F3B]">Password:</label>
+                    <Input type="password" id="password" name="password" required className="bg-white text-[#283F3B] border-[#556F44]" />
+                  </div>
+                  <div className="flex justify-end space-x-2">
+                    <Button type="submit" className="bg-[#659B5E] hover:bg-[#556F44] text-white">Log In</Button>
+                    <Button type="button" onClick={closeLoginModal} variant="outline" className="bg-[#95BF74] text-[#283F3B] border-[#556F44] hover:bg-[#556F44] hover:text-white">
+                      Close
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+        </>
       )}
 
-      <div style={{
-        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-        backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 999
-      }} onClick={toggleLoginModal} hidden={!isLoginModalOpen} />
-
-    <Card className="w-full max-w-2xl bg-gray-800 border-gray-700">
-      <CardHeader className="border-b border-gray-700">
-        <CardTitle className="text-2xl sm:text-3xl flex items-center gap-2 text-gray-100">
-          Mastermind: Can you Read the Computer&apos;s RAM? <Bot className="w-6 h-6" />
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="pt-6">
-        <form onSubmit={handleSubmit} className="flex gap-4 mb-6">
+      {/* Game Content */}
+      <form onSubmit={handleSubmit} className="space-y-4 mb-6">
+        <div className="flex flex-col items-center space-y-4">
           <Input
             type="text"
             maxLength={4}
             pattern="\d*"
             value={currentGuess}
             onChange={(e) => setCurrentGuess(e.target.value)}
-            placeholder="Enter a 4-digit number"
-            className="bg-gray-700 border-gray-600 text-gray-100"
+            placeholder="Enter 4 digits"
+            className="bg-white text-[#283F3B] border-[#556F44] w-48 text-center text-m transition-width duration-300 focus:w-64"
             disabled={gameOver}
           />
           <Button 
             type="submit" 
             disabled={currentGuess.length !== 4 || gameOver}
-            variant="secondary"
+            className="bg-[#659B5E] hover:bg-[#556F44] text-white"
           >
             Submit Guess
           </Button>
-        </form>
+        </div>
+      </form>
 
-        <div className="space-y-6 text-gray-100">
-          <div className="space-y-2">
-            <h2 className="text-xl font-semibold">Results</h2>
-            <p className="text-gray-400">Guesses Left: {maxGuesses-guessesCount}</p>
-            {gameOver && (
-              <p className="text-yellow-400">
-                Game Over! The number was {targetNumber}
-              </p>
-            )}
-          </div>
+      <div className="space-y-6 text-[#283F3B]">
+        <div className="space-y-2">
+          <h2 className="text-xl font-semibold">Results</h2>
+          <p>Guesses Left: {maxGuesses - guessesCount}</p>
+          {gameOver && (
+            <p className="text-[#556F44] font-bold text-[#EFEBCE]">
+              Game Over! The number was {' '}
+              <span className="underline">{targetNumber.join('')}</span>.
+            </p>
+          )}
+        </div>
 
-          <div className="space-y-2">
-            <h2 className="text-xl font-semibold">Guess History</h2>
-            <div className="space-y-3">
-              {guessHistory.map((guess, index) => (
-                <div
-                  key={index}
-                  className="p-3 rounded-lg bg-gray-700 space-y-1"
-                >
-                  <p className="font-medium">Guess {guessHistory.length - index}: {guess.number}</p>
-                  <p className="text-sm text-gray-400">
-                    Correct Digits: {guess.digitsCorrect} | Correct Positions: {guess.positionsCorrect}
-                  </p>
-                </div>
-              ))}
-            </div>
+        <div className="space-y-2">
+          <h2 className="text-xl font-semibold">Guess History</h2>
+          <div className="space-y-3">
+            {guessHistory.map((guess, index) => (
+              <div
+                key={index}
+                className="p-3 rounded-lg bg-[#659B5E] text-white space-y-1"
+              >
+                <p className="font-medium">Guess {guessHistory.length - index}: {guess.number}</p>
+                <p className="text-sm">
+                  Correct Digits: {guess.digitsCorrect} | Correct Positions: {guess.positionsCorrect}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
-      </CardContent>
-    </Card>
-    </>
-  )
-  // return(
-    
-  //   <>
-  //   <h1>Mastermind: Can you Read the Computer's RAM? 🤖</h1>
-  //   {/* Login and Logout Buttons */}
-  //   { !isLoggedIn && (
-  //     <button style={{ position: 'absolute', top: 35, right: 100 }} onClick={toggleLoginModal}>
-  //     Login
-  //     </button>
-  //   )}
-
-  //   { isLoggedIn && (
-  //     <>
-  //       <button style={{ position: 'absolute', top: 35, right: 200 }} onClick={() => navigate('/account')}>Account</button>
-  //       <button style={{ position: 'absolute', top: 35, right: 100 }} onClick={handleLogout}>
-  //       Logout
-  //       </button>
-  //     </>
-
-  //   )}
-    
-  //     {/* Login Modal */}
-  //     {isLoginModalOpen && (
-  //       <div style={{
-  //         position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-  //         backgroundColor: 'white', padding: '20px', zIndex: 1000
-  //       }}>
-  //         <form onSubmit={handleLogin}>
-  //           <label>
-  //             Email:
-  //             <input type="email" name="email" required />
-  //           </label>
-  //           <label>
-  //             Password:
-  //             <input type="password" name="password" required />
-  //           </label>
-  //           <button type="submit">Log In</button>
-  //           <button type="button" onClick={toggleLoginModal}>Close</button>
-  //         </form>
-  //       </div>
-  //     )}
-
-  //     <div style={{
-  //       position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-  //       backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 999
-  //     }} onClick={toggleLoginModal} hidden={!isLoginModalOpen} />
-      
-  //   {/* Game Contents */}
-  //   <form onSubmit={checkGuess}>
-  //     <label htmlFor="numberInput">Enter a 4-digit Number:</label>
-  //       <input
-  //           type="text"
-  //           id="textInput"
-  //           value={guess}
-  //           onChange={(e) => setGuess(e.target.value)}
-  //           required // Makes sure the input is not empty
-  //       />
-  //     <button type="submit">Submit Guess</button>
-  //   </form>
-  //   <h3>Results</h3>
-  //   <h3>Guesses Left: {maxGuesses - guessesCount} </h3>
-    
-  //   {allIncorrect && (<p>All digits incorrect.</p>)}
-  //   { showResults && 
-  //   (<>
-  //   <p>Good try! For your guess <strong>{currentGuess}</strong>, you correctly guessed <strong>{digitsCorrect} digits</strong> in <strong>{positionsCorrect} positions</strong>.</p>
-  //   {noGuessesLeft && (<p>The correct answer is <strong>{answer}</strong>. Refresh the page to play again 😃 </p>)}
-  //   </>)}
-    
-  //   <h3>Guess History</h3>
-  //     <GuessHistory guessHistory={guessHistory} />
-  //   </>
-
-    
-    
-  // ); 
+      </div>
+    </div>
+  </div>
+);
 };
 
 export default Game;
+

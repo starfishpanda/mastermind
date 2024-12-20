@@ -1,7 +1,7 @@
-import UserModel from '../models/UserModel';
+import UserModel from '../models/UserModel.js';
 import { Request, Response, NextFunction } from 'express';
 import argon2 from 'argon2';
-import UserSession from '../types/UserSession'
+import UserSession from '../types/UserSession.js'
 
 
 const userController = {

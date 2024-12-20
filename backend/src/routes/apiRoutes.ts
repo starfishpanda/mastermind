@@ -1,7 +1,7 @@
 import express from 'express';
-import randomNumberController from '../controllers/randomNumberController';
-import userController from '../controllers/userController';
-import leaderboardController from '../controllers/leaderboardController';
+import randomNumberController from '../controllers/randomNumberController.js';
+import userController from '../controllers/userController.js';
+import leaderboardController from '../controllers/leaderboardController.js';
 const apiRouter = express.Router();
 
 // Fetch random numbers for game
