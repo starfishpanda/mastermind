@@ -1,4 +1,4 @@
-import UserModel from '../models/UserModel.js';
+import UserModel, { IUser } from '../models/UserModel.js';
 import { Request, Response, NextFunction } from 'express';
 import argon2 from 'argon2';
 import UserSession from '../types/UserSession.js'
@@ -14,18 +14,18 @@ const userController = {
     }
 
     try {
-        let user = await UserModel.findOne({ email });
+        let user: IUser | null = await UserModel.findOne({ email });
 
         // If the user doesn't exist, create a new one
         if (!user) {
             const hashedPassword = await argon2.hash(password);
             user = await UserModel.create({ email, password: hashedPassword });
             console.log('New user created.');
-            (req.session as UserSession).userId = user._id.toString(); // Set user ID in session
+            (req.session as UserSession).userId = user?._id.toString(); // Set user ID in session
             return res.status(201).json({ message: 'User successfully created.'});
         } else {
             // If the user exists, verify the password
-            if (!(await argon2.verify(user.password, password))) {
+            if (!(await argon2.verify(user?.password, password))) {
                 console.error('userController.upsertUser: Incorrect password');
                 return res.status(401).json({ message: 'Login unsuccessful, incorrect password.' });
             }

@@ -1,24 +1,28 @@
 import * as dotenv from 'dotenv';
-dotenv.config();
-
 import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import apiRouter from './routes/apiRoutes.js';
 import mongoose from 'mongoose';
 import path from 'path';
 import http from 'http';
-import session from 'express-session';
-import MongoStore from 'connect-mongo';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+dotenv.config({
+  path: process.env.NODE_ENV === 'development' ? resolve(__dirname, '.env.development') : resolve(__dirname, '../.env.production')
+});
+  
 
 const app: Express = express();
 app.use(express.json());
 app.use(express.urlencoded( { extended: true }));
-const MODE = process.env.NODE_ENV || 'development';
-const HOST = process.env.HOST || 'localhost';
+const MODE = process.env.NODE_ENV;
+const HOST = process.env.HOST || '0.0.0.0';
 const PORT = Number(process.env.PORT) || 3000;
 const SESSION_SECRET = process.env.SESSION_SECRET || '';
-const URI = process.env.DATABASE_URI || 'mongodb://localhost:27017';
+const URI = process.env.DATABASE_URI || 'mongodb://localhost:27016/mastermind';
 
 let server: http.Server | null = null;
 
@@ -39,6 +43,7 @@ export const startServer = async (): Promise<http.Server | undefined> => {
     process.exit(1);
   }
 
+  // Start Server
   server = app.listen(PORT, HOST, () => {
     console.log(`Server running at http://${HOST}:${PORT}/`);
   });
@@ -67,20 +72,6 @@ export const stopServer = async (): Promise<void> => {
 
 
 app.use(cors());
-app.use(
-  session({
-    secret: SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({ mongoUrl: process.env.DATABASE_URI }),
-    cookie: {
-      httpOnly: true,
-      secure: MODE === 'production', // True for production environment
-      maxAge: 24 * 60 * 60 * 1000, // Cookie expires after 24 hours (24 hours, 60 minutes, 60 seconds, 1000 milliseconds)
-    },
-  })
-);
-
 
 app.use('/api', apiRouter); // use a router for api routes
 
@@ -88,7 +79,7 @@ if (MODE === 'production'){
   startServer();
   app.use(express.static(path.join(__dirname, 'dist/client')));
   app.get('*', (req: Request, res: Response) => {
-    res.sendFile(path.join(__dirname, 'client/index.html'));
+    res.sendFile(path.join(__dirname, 'dist/client/index.html'));
   });
 }
 else if (MODE === 'testing'){
@@ -97,7 +88,7 @@ else if (MODE === 'testing'){
     res.send('Mastermind Testing');
   });
 } else {
-  // Webpack serves the static files for development hot reloading
+  // Vite serves the static files for development hot reloading
   startServer();
 }
 

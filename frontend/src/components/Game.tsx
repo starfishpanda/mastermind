@@ -1,20 +1,16 @@
 import {useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import guessCounter from '../utils/guessCounter';
-import { GuessType } from '../types/GuessType';
-import GuessHistory from './GuessHistory';
-import { showLoginSuccessToast, showLoginUnsuccessfulToast, showLogoutSuccessToast} from '../utils/toasts';
+import guessCounter from '../utils/guessCounter.js';
+import { GuessType } from '../types/GuessType.js';
+import { showLoginSuccessToast, showLoginUnsuccessfulToast, showLogoutSuccessToast} from '../utils/toasts.js';
 import { z } from 'zod';
-import AuthContext from '../utils/AuthContext';
-import { Input } from './ui/input'
-import { Button } from './ui/button'
-import { Card, CardHeader, CardTitle, CardContent } from './ui/card'
+import AuthContext from '../utils/AuthContext.jsx';
+import { Input } from './ui/input.jsx'
+import { Button } from './ui/button.jsx'
+import { Card, CardHeader, CardTitle, CardContent } from './ui/card.jsx'
 
-
-const Game = () => {
-  const maxGuesses = 10;
-  const [targetNumber,setTargetNumber] = useState<number[]>([]); // The random number fetched from the API
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000'; [targetNumber,setTargetNumber] = useState<number[]>([]); // The random number fetched from the API
   const [currentGuess, setCurrentGuess] = useState<string>(''); // Setting the guess to be displayed in results so it doesn't change as user types new guess
   const [guessesCount, setGuessesCount] = useState(0); // Number of guesses left before the game ends
   const [guessHistory, setGuessHistory] = useState<GuessType[]>([]);
@@ -82,7 +78,7 @@ const Game = () => {
     const fetchRandomNumbers = async () => {
 
       try{
-        const response = await axios.get('/api/get-random-numbers')
+        const response = await axios.get(`${BACKEND_URL}/api/get-random-numbers`)
         const randomNumbersArray: number[] = response.data;
         setTargetNumber(randomNumbersArray);
         console.log("random numbers array",randomNumbersArray);

@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "esnext",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
+
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
@@ -14,6 +15,10 @@
     "paths": {
       "@/*": ["src/*"]
     },
+    
+  },
+  "ts-node": {
+    "esm": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

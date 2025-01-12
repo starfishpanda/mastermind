@@ -1,6 +1,6 @@
 # backend/Dockerfile
 
-FROM node:16-alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
@@ -14,6 +14,9 @@ COPY . .
 # Install TypeScript globally if needed
 RUN npm install -g typescript
 
+# Copy production env file
+COPY .env.production .env
+
 # Build the TypeScript code (if applicable)
 RUN npm run build
 
@@ -21,4 +24,4 @@ RUN npm run build
 EXPOSE 3000
 
 # Start the backend server
-CMD ["npm", "run", "start"]
+CMD ["node", "dist/index.js"]

@@ -7,9 +7,9 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import GameRecords from './GameRecords';
-import AuthContext from '../utils/AuthContext';
-import { showDeleteAccountSuccessToast } from '../utils/toasts'
+import GameRecords from './GameRecords.jsx';
+import AuthContext from '../utils/AuthContext.jsx';
+import { showDeleteAccountSuccessToast } from '../utils/toasts.js'
 
 
 const Account = () => {

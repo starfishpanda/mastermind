@@ -1,9 +1,9 @@
 import { Route, Routes } from 'react-router-dom';
-import Home from './components/Home'
-import Game from './components/Game';
-import NotFound from './components/NotFound';
-import EndGame from './components/EndGame';
-import Account from './components/Account';
+import Home from './components/Home.jsx'
+import Game from './components/Game.jsx';
+import NotFound from './components/NotFound.jsx';
+import EndGame from './components/EndGame.jsx';
+import Account from './components/Account.jsx';
 
 import { AuthProvider }from './utils/AuthContext';
 

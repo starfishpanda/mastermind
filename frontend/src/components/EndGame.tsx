@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Button } from "./ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
+import { Button } from "./ui/button.jsx"
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card.jsx"
 import { Trophy, Frown } from 'lucide-react'
 
 const EndGame = () => {

@@ -1,0 +1,35 @@
+{
+  "name": "mastermind-backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc --project tsconfig.json",
+    "start": "node dist/index.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "argon2": "^0.41.1",
+    "axios": "^1.7.9",
+    "connect-mongo": "^5.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.21.1",
+    "express-session": "^1.18.1",
+    "mongoose": "^8.9.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.13.0",
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.17",
+    "@types/express-session": "^1.18.0",
+    "@types/node": "^22.9.3",
+    "eslint": "^9.13.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.2"
+  }
+}
