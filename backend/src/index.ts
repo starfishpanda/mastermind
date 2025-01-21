@@ -5,24 +5,24 @@ import apiRouter from './routes/apiRoutes.js';
 import mongoose from 'mongoose';
 import path from 'path';
 import http from 'http';
-import { dirname } from 'path';
+import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-dotenv.config({
-  path: process.env.NODE_ENV === 'development' ? resolve(__dirname, '.env.development') : resolve(__dirname, '../.env.production')
-});
+// dotenv.config({
+//   path: process.env.NODE_ENV === 'development' ? resolve(__dirname, '.env.development') : resolve(__dirname, '../.env.production')
+// });
+dotenv.config()
   
 
 const app: Express = express();
 app.use(express.json());
 app.use(express.urlencoded( { extended: true }));
-const MODE = process.env.NODE_ENV;
 const HOST = process.env.HOST || '0.0.0.0';
+const MODE = process.env.MODE;
 const PORT = Number(process.env.PORT) || 3000;
-const SESSION_SECRET = process.env.SESSION_SECRET || '';
-const URI = process.env.DATABASE_URI || 'mongodb://localhost:27016/mastermind';
+const URI = process.env.MONGODB_URI;
 
 let server: http.Server | null = null;
 
