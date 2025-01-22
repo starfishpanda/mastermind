@@ -1,7 +1,7 @@
-import { Session } from 'express-session';
+import { Session } from 'express-session'
 
 interface UserSession extends Session {
-  userId?: string;
+  userId?: string
 }
 
-export default UserSession;
+export default UserSession

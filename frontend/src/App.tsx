@@ -1,11 +1,11 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom'
 import Home from './components/Home.jsx'
-import Game from './components/Game.jsx';
-import NotFound from './components/NotFound.jsx';
-import EndGame from './components/EndGame.jsx';
-import Account from './components/Account.jsx';
+import Game from './components/Game.jsx'
+import NotFound from './components/NotFound.jsx'
+import EndGame from './components/EndGame.jsx'
+import Account from './components/Account.jsx'
 
-import { AuthProvider }from './utils/AuthContext';
+import { AuthProvider } from './utils/AuthContext'
 
 const App = () => {
   return (
@@ -13,8 +13,8 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/play" element={<Game />} />
-        <Route path="end-game" element={<EndGame />}/>
-        <Route path="account" element={<Account />}/>
+        <Route path="end-game" element={<EndGame />} />
+        <Route path="account" element={<Account />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       {/* <div>
@@ -22,8 +22,7 @@ const App = () => {
         <Game/>
       </div> */}
     </AuthProvider>
-    
-  );
-};
+  )
+}
 
-export default App;
+export default App

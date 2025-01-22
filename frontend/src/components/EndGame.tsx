@@ -1,21 +1,21 @@
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Button } from "./ui/button.jsx"
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card.jsx"
+import { useLocation, useNavigate } from 'react-router-dom'
+import { Button } from './ui/button.jsx'
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card.jsx'
 import { Trophy, Frown } from 'lucide-react'
 
 const EndGame = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { endResult } = location.state || {};
+  const location = useLocation()
+  const navigate = useNavigate()
+  const { endResult } = location.state || {}
 
   const handlePlayAgain = () => {
-    navigate('/play');
-  };
+    navigate('/play')
+  }
 
   const handleGameStats = () => {
     // TODO: Implement game stats functionality
-    console.log("Game Stats button clicked");
-  };
+    console.log('Game Stats button clicked')
+  }
 
   return (
     <div className="min-h-screen bg-[#99DDC8] flex items-center justify-center p-4">
@@ -56,8 +56,7 @@ const EndGame = () => {
         </CardContent>
       </Card>
     </div>
-  );
-};
+  )
+}
 
-export default EndGame;
-
+export default EndGame

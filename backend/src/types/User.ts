@@ -1,5 +1,5 @@
-import { ObjectId } from 'mongoose';
+import { ObjectId } from 'mongoose'
 
 export interface User {
-  _id: ObjectId;
+  _id: ObjectId
 }
