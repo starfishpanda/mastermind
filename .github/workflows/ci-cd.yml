@@ -26,8 +26,8 @@ jobs:
         working-directory: ./backend
         run: |
           npm ci
-          npm run lint
           npm install globals@^15.14.0 --save-dev
+          npm run lint
           npm run build
 
       # (Optionally run tests here if you have them)
