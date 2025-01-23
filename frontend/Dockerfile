@@ -7,7 +7,7 @@ WORKDIR /app
 
 # Copy package.json and package-lock.json first to leverage caching
 COPY package*.json tsconfig.json ./
-RUN ci
+RUN npm ci
 
 # Copy the rest of the frontend code
 COPY . .
