@@ -9,6 +9,10 @@ on:
 jobs:
   build-and-push-images:
     runs-on: ubuntu-latest
+
+    env:
+      ECR_URI: 644171555460.dkr.ecr.us-west-2.amazonaws.com/philipbrown/mastermind
+
     
     steps:
       - name: Check out repository
@@ -68,14 +72,14 @@ jobs:
       - name: Build & Push Backend Image
         run: |
           docker build -t mastermind-backend:latest ./backend
-          docker tag mastermind-backend:latest ${{ steps.login-ecr.outputs.registry }}/mastermind-backend:latest
-          docker push ${{ steps.login-ecr.outputs.registry }}/mastermind-backend:latest
+          docker tag mastermind-backend:latest ${{ env.ECR_URI }}/mastermind-backend:latest
+          docker push ${{ env.ECR_URI }}/mastermind-backend:latest
 
       - name: Build & Push Frontend Image
         run: |
           docker build -t mastermind-frontend:latest ./frontend
-          docker tag mastermind-frontend:latest ${{ steps.login-ecr.outputs.registry }}/mastermind-frontend:latest
-          docker push ${{ steps.login-ecr.outputs.registry }}/mastermind-frontend:latest
+          docker tag mastermind-frontend:latest ${{ env.ECR_URI }}/mastermind-frontend:latest
+          docker push ${{ env.ECR_URI }}/mastermind-frontend:latest
 
       # -----------------------------------
       # Docker Build and Push to GHCR
