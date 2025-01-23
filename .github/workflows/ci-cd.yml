@@ -41,6 +41,7 @@ jobs:
         working-directory: ./frontend
         run: |
           npm ci
+          npm install globals@^15.14.0 --save-dev
           npm run lint
           npm run build
 
