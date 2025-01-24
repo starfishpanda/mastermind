@@ -72,14 +72,14 @@ jobs:
       - name: Build & Push Backend Image
         run: |
           docker build -t mastermind-backend:latest ./backend
-          docker tag mastermind-backend:latest ${{ env.ECR_URI }}
-          docker push ${{ env.ECR_URI }}
+          docker tag mastermind-backend:latest ${{ env.ECR_URI }}:mastermind-backend
+          docker push ${{ env.ECR_URI }}:mastermind-backend
 
       - name: Build & Push Frontend Image
         run: |
           docker build -t mastermind-frontend:latest ./frontend
-          docker tag mastermind-frontend:latest ${{ env.ECR_URI }}
-          docker push ${{ env.ECR_URI }}
+          docker tag mastermind-frontend:latest ${{ env.ECR_URI }}:mastermind-frontend
+          docker push ${{ env.ECR_URI }}:mastermind-frontend
 
       # -----------------------------------
       # Docker Build and Push to GHCR
