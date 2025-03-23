@@ -2,28 +2,27 @@ import * as dotenv from 'dotenv'
 import express, { Express, Request, Response, NextFunction } from 'express'
 import cors from 'cors'
 import apiRouter from './routes/apiRoutes.js'
+import authRouter from './routes/authRoutes.js'
 import mongoose from 'mongoose'
 import path from 'path'
 import http from 'http'
 import { dirname, resolve } from 'path'
 import { fileURLToPath } from 'url'
-
+import { config } from './config/config.js'
 import { AppError } from './types/AppError.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
-// dotenv.config({
-//   path: process.env.NODE_ENV === 'development' ? resolve(__dirname, '.env.development') : resolve(__dirname, '../.env.production')
-// });
 dotenv.config()
 
 const app: Express = express()
+app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
 const HOST: string = process.env.HOST || '0.0.0.0'
 const MODE: string = process.env.MODE || ''
-const PORT: number = Number(process.env.PORT) || 3000
-const URI: string = process.env.MONGODB_URI || ''
+const PORT: number = Number(config.port)
 
 let server: http.Server | null = null
 
@@ -37,8 +36,8 @@ export const startServer = async (): Promise<http.Server | undefined> => {
   // Connect to MongoDB
   try {
     console.log('Connecting to MongoDB...')
-    await mongoose.connect(URI)
-    console.log('Connected to MongoDB.')
+    await mongoose.connect(config.mongodb.uri)
+    console.log(`Connected to MongoDB at URI ${config.mongodb.uri}.`)
   } catch (error) {
     console.error(`Failed to connect to MongoDB: ${error}`)
     process.exit(1)
@@ -71,9 +70,8 @@ export const stopServer = async (): Promise<void> => {
   }
 }
 
-app.use(cors())
-
 app.use('/api', apiRouter) // use a router for api routes
+app.use('/auth', authRouter)
 
 if (MODE === 'production') {
   startServer()

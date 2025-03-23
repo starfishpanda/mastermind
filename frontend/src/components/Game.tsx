@@ -138,7 +138,9 @@ function Game() {
     <div className="min-h-screen bg-[#99DDC8] flex items-center justify-center p-4">
       <div className="bg-[#95BF74] border-4 border-[#556F44] rounded-lg shadow-xl p-8 w-full max-w-2xl">
         <h1 className="text-3xl font-bold text-center text-[#283F3B] mb-8">
-          Mastermind: Can you Read the Computer&apos;s Mind?
+          Mastermind
+          <br />
+          Can you Read the Computer&apos;s Mind?
         </h1>
 
         {/* Login/Logout buttons */}

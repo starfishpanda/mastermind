@@ -12,6 +12,8 @@ jobs:
 
     env:
       ECR_URI: 644171555460.dkr.ecr.us-west-2.amazonaws.com/philipbrown/mastermind
+      FRONTEND_BUCKET: mastermind-frontend-webapp
+      CLOUDFRONT_DISTRIBUTION_ID: E39SHS60J21HOH
 
     
     steps:
@@ -25,9 +27,8 @@ jobs:
 
       - name: Install root dependencies
         run: npm ci
-      # -----------------------------------
-      # Build & Test Backend
-      # -----------------------------------
+
+        # Build & Test Backend
       - name: Install & Build Backend
         working-directory: ./backend
         run: |
@@ -40,9 +41,7 @@ jobs:
       #   working-directory: ./backend
       #   run: npm run test
 
-      # -----------------------------------
       # Build & Test Frontend
-      # -----------------------------------
       - name: Install & Build Frontend
         working-directory: ./frontend
         run: |
@@ -55,9 +54,7 @@ jobs:
       #   working-directory: ./frontend
       #   run: npm run test
       
-      # -----------------------------------
       # Configure AWS & Push Images to ECR
-      # -----------------------------------
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -65,6 +62,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: 'us-west-2'
 
+      # ECR Login and Backend Container Push
       - name: Log in to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
@@ -75,28 +73,14 @@ jobs:
           docker tag mastermind-backend:latest ${{ env.ECR_URI }}:mastermind-backend
           docker push ${{ env.ECR_URI }}:mastermind-backend
 
-      - name: Build & Push Frontend Image
+      # S3 Frontend Deployment
+      - name: Deploy Frontend to S3
         run: |
-          docker build -t mastermind-frontend:latest ./frontend
-          docker tag mastermind-frontend:latest ${{ env.ECR_URI }}:mastermind-frontend
-          docker push ${{ env.ECR_URI }}:mastermind-frontend
+          aws s3 sync ./frontend/build s3://${{ env.FRONTEND_BUCKET }} --delete
 
-      # -----------------------------------
-      # Docker Build and Push to GHCR
-      # -----------------------------------
-      # - name: Log in to GitHub Container Registry
-      #   uses: docker/login-action@v2
-      #   with:
-      #     registry: ghcr.io
-      #     username: ${{ github.actor }}
-      #     password: ${{ secrets.GITHUB_TOKEN }}
-
-      # - name: Build & Push Backend Image
-      #   run: |
-      #     docker build -t ghcr.io/${{ github.repository }}/mastermind-backend:latest ./backend
-      #     docker push ghcr.io/${{ github.repository }}/mastermind-backend:latest
-
-      # - name: Build & Push Frontend Image
-      #   run: |
-      #     docker build -t ghcr.io/${{ github.repository }}/mastermind-frontend:latest ./frontend
-      #     docker push ghcr.io/${{ github.repository }}/mastermind-frontend:latest
+      # CloudFront Cache Invalidation
+      - name: Invalidate CloudFront Cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"

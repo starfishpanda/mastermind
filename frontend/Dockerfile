@@ -9,10 +9,15 @@ WORKDIR /app
 COPY package*.json tsconfig.json ./
 RUN npm ci
 
+# Copy .env.production if you want Vite to read from it
+COPY .env.production ./
+
 # Copy the rest of the frontend code
 COPY . .
-ARG NODE_ENV
-ENV NODE_ENV=$NODE_ENV
+
+# (Optional) If you want to set NODE_ENV=production
+ENV NODE_ENV=production
+
 # Build production artifacts (the final React build in /dist)
 RUN npm run build
 

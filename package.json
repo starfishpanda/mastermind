@@ -4,11 +4,9 @@
   "private": true,
   "scripts": {
     "lint": "npm run lint:frontend && npm run lint:backend",
-    "lint:fix": "npm run lint:frontend:fix && npm run lint:backend:fix",
-    "lint:frontend": "npm --prefix frontend run lint",
-    "lint:frontend:fix": "npm --prefix frontend run lint:fix",
-    "lint:backend": "npm --prefix backend run lint",
-    "lint:backend:fix": "npm --prefix backend run lint:fix",
+    "lint:frontend": "npm --prefix frontend run lint:fix",
+    "lint:backend": "npm --prefix backend run lint:fix",
+    "lint:fix": "eslint . --fix --config ../eslint.config.mjs",
     "build": "npm run build:frontend && npm run build:backend",
     "build:frontend": "npm --prefix frontend run build",
     "build:backend": "npm --prefix backend run build",
@@ -21,11 +19,12 @@
     "@typescript-eslint/eslint-plugin": "^8.21.0",
     "@typescript-eslint/parser": "^8.21.0",
     "concurrently": "^9.1.0",
-    "eslint": "^9.18.0",
-    "eslint-config-prettier": "^10.0.1",
+    "eslint": "^9.21.0",
+    "eslint-config-prettier": "^10.0.2",
     "eslint-plugin-prettier": "^5.2.3",
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.1.0",
-    "globals": "^15.14.0"
+    "globals": "^15.14.0",
+    "prettier": "^3.5.3"
   }
 }
