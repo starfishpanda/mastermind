@@ -8,8 +8,9 @@ import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import GameRecords from './GameRecords.jsx'
-import AuthContext from '../utils/AuthContext.jsx'
+import { useAuth } from '../utils/AuthContext.jsx'
 import { showDeleteAccountSuccessToast } from '../utils/toasts.js'
+import { Button } from './ui/button'
 
 const Account = () => {
   const {
@@ -21,7 +22,8 @@ const Account = () => {
     setTimeLimit,
     // currentTime,
     // setCurrentTime,
-  } = useContext(AuthContext)
+    user
+  } = useAuth()
   const navigate = useNavigate()
   const [dropdownTime, setDropdownTime] = useState((timeLimit / 60000).toString())
 
@@ -42,38 +44,76 @@ const Account = () => {
   }
 
   return (
-    <>
-      {/*Back to Game Button */}
-      <button style={{ position: 'absolute', top: 20, right: 20 }} onClick={() => navigate('/')}>
-        Back to Game
-      </button>
-      {/* List of Game Records */}
-      <GameRecords />
-      {/* Delete Account */}
-      <button style={{ marginTop: 10 }} onClick={handleDeleteAccount}>
-        Delete Account
-      </button>
+    <div className="min-h-screen bg-[#99DDC8] p-4">
+      <div className="flex justify-between items-center mb-4">
+        <Button
+          onClick={() => navigate('/')}
+          variant="outline"
+          className="bg-[#95BF74] text-[#283F3B] border-[#556F44] hover:bg-[#556F44] hover:text-white"
+        >
+          Home
+        </Button>
+        <Button
+          onClick={() => navigate('/play')}
+          variant="outline"
+          className="bg-[#95BF74] text-[#283F3B] border-[#556F44] hover:bg-[#556F44] hover:text-white"
+        >
+          Play
+        </Button>
+      </div>
 
-      {/* Timer Settings */}
-      <Box sx={{ display: 'flex', justifyContent: 'left', width: '50%', paddingTop: 5 }}>
-        <FormControl sx={{ width: '30%' }}>
-          <InputLabel id="time-limit-select-label">Time Limit</InputLabel>
-          <Select
-            labelId="time-limit-select-label"
-            id="time-limit-select"
-            value={dropdownTime}
-            label="Time Limit"
-            onChange={handleTimeChange}
-          >
-            {Array.from({ length: 10 }, (_, i) => (
-              <MenuItem key={i + 1} value={i + 1}>
-                {i + 1} Minutes
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Box>
-    </>
+      <div className="bg-[#95BF74] border-4 border-[#556F44] rounded-lg shadow-xl p-8 max-w-2xl mx-auto">
+        <h1 className="text-4xl font-bold text-center text-[#283F3B] mb-8">Account Details</h1>
+        
+        <div className="space-y-6">
+          <div className="bg-white rounded-lg p-6">
+            <h2 className="text-2xl font-semibold text-[#283F3B] mb-4">Profile Information</h2>
+            <div className="space-y-3">
+              <p className="text-lg">
+                <span className="font-semibold">Username:</span> {user?.username}
+              </p>
+              <p className="text-lg">
+                <span className="font-semibold">Email:</span> {user?.email}
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg p-6">
+            <h2 className="text-2xl font-semibold text-[#283F3B] mb-4">Game Statistics</h2>
+            <div className="space-y-3">
+              <p className="text-lg">
+                <span className="font-semibold">Games Played:</span> {user?.gamesPlayed || 0}
+              </p>
+              <p className="text-lg">
+                <span className="font-semibold">Games Won:</span> {user?.gamesWon || 0}
+              </p>
+              <p className="text-lg">
+                <span className="font-semibold">Win Rate:</span>{' '}
+                {user?.gamesPlayed
+                  ? `${((user?.gamesWon || 0) / user?.gamesPlayed * 100).toFixed(1)}%`
+                  : '0%'}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex justify-center space-x-4">
+            <Button
+              onClick={() => navigate('/play')}
+              className="bg-[#659B5E] hover:bg-[#556F44] text-white"
+            >
+              Play Game
+            </Button>
+            <Button
+              onClick={() => navigate('/')}
+              variant="outline"
+              className="bg-[#95BF74] text-[#283F3B] border-[#556F44] hover:bg-[#556F44] hover:text-white"
+            >
+              Back to Home
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
 

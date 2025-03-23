@@ -9,10 +9,11 @@ import {
   showLogoutSuccessToast,
 } from '../utils/toasts.js'
 import { z } from 'zod'
-import AuthContext from '../utils/AuthContext.jsx'
+import { useAuth } from '../utils/AuthContext'
 import { Input } from './ui/input.jsx'
 import { Button } from './ui/button.jsx'
 import { Card, CardHeader, CardTitle, CardContent } from './ui/card.jsx'
+
 function Game() {
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
   const [targetNumber, setTargetNumber] = useState<number[]>([]) // The random number fetched from the API
@@ -23,7 +24,7 @@ function Game() {
   const [gameOver, setGameOver] = useState(false)
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
   const maxGuesses = 10
-  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext)
+  const { isLoggedIn, setIsLoggedIn, user, isAuthenticated } = useAuth()
 
   const navigate = useNavigate()
   const toggleLoginModal = () => setIsLoginModalOpen(!isLoginModalOpen)
@@ -145,35 +146,13 @@ function Game() {
 
         {/* Login/Logout buttons */}
         <div className="absolute top-4 right-4 space-x-4">
-          {!isLoggedIn ? (
-            // **Commmented out login until login security established**
-            // <Button onClick={toggleLoginModal} variant="outline" className="bg-[#95BF74] text-[#283F3B] border-[#556F44] hover:bg-[#556F44] hover:text-white">
-            //   Login
-            // </Button>
-            <Button
-              variant="outline"
-              className="bg-[#95BF74] text-[#283F3B] border-[#556F44] hover:bg-[#556F44] hover:text-white"
-            >
-              Login
-            </Button>
-          ) : (
-            <>
-              <Button
-                onClick={() => navigate('/account')}
-                variant="outline"
-                className="bg-[#95BF74] text-[#283F3B] border-[#556F44] hover:bg-[#556F44] hover:text-white"
-              >
-                Account
-              </Button>
-              <Button
-                onClick={handleLogout}
-                variant="outline"
-                className="bg-[#95BF74] text-[#283F3B] border-[#556F44] hover:bg-[#556F44] hover:text-white"
-              >
-                Logout
-              </Button>
-            </>
-          )}
+          <Button
+            onClick={() => navigate(isAuthenticated ? '/account' : '/login')}
+            variant="outline"
+            className="bg-[#95BF74] text-[#283F3B] border-[#556F44] hover:bg-[#556F44] hover:text-white"
+          >
+            {isAuthenticated ? 'Account' : 'Login'}
+          </Button>
         </div>
 
         {/* Login Modal */}

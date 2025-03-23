@@ -1,8 +1,16 @@
 import { Button } from '../ui/button.js'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../utils/AuthContext'
 
 export default function Home() {
   const navigate = useNavigate()
+  const { isAuthenticated, logout } = useAuth()
+
+  const handleLogout = () => {
+    logout()
+    navigate('/')
+  }
+
   return (
     <div className="min-h-screen bg-[#99DDC8] flex items-center justify-center p-4">
       <div className="bg-[#95BF74] border-4 border-[#556F44] rounded-lg shadow-xl p-8 w-full max-w-md">
@@ -19,20 +27,42 @@ export default function Home() {
           >
             Play
           </Button>
-          <Button
-            onClick={() => navigate('/signup')}
-            variant="outline"
-            className="w-full bg-[#95BF74] text-[#283F3B] border-[#556F44] hover:bg-[#556F44] hover:text-white"
-          >
-            Sign up
-          </Button>
-          <Button
-            onClick={() => navigate('/login')}
-            variant="outline"
-            className="w-full bg-[#95BF74] text-[#283F3B] border-[#556F44] hover:bg-[#556F44] hover:text-white"
-          >
-            Log in
-          </Button>
+          
+          {!isAuthenticated ? (
+            <>
+              <Button
+                onClick={() => navigate('/signup')}
+                variant="outline"
+                className="w-full bg-[#95BF74] text-[#283F3B] border-[#556F44] hover:bg-[#556F44] hover:text-white"
+              >
+                Sign up
+              </Button>
+              <Button
+                onClick={() => navigate('/login')}
+                variant="outline"
+                className="w-full bg-[#95BF74] text-[#283F3B] border-[#556F44] hover:bg-[#556F44] hover:text-white"
+              >
+                Log in
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                onClick={() => navigate('/account')}
+                variant="outline"
+                className="w-full bg-[#95BF74] text-[#283F3B] border-[#556F44] hover:bg-[#556F44] hover:text-white"
+              >
+                Account
+              </Button>
+              <Button
+                onClick={handleLogout}
+                variant="outline"
+                className="w-full bg-[#95BF74] text-[#283F3B] border-[#556F44] hover:bg-[#556F44] hover:text-white"
+              >
+                Log out
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </div>

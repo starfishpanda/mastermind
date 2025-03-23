@@ -18,13 +18,13 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/play" element={<Game />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        <Route path="end-game" element={<EndGame />} />
-        <Route path="account" element={<Account />} />
-        <Route path="verify-email/:token" element={<VerifyEmail />} />
+        <Route path="/end-game" element={<EndGame />} />
+        <Route path="/account" element={<Account />} />
+        <Route path="/verify-email/:token" element={<VerifyEmail />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       {/* <div>

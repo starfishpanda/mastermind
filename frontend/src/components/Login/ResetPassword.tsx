@@ -19,6 +19,7 @@ export default function ResetPassword() {
     }
 
     try {
+      console.log('Using token:', token)
       const response = await axios.post(`/auth/reset-password/${token}`, {
         password,
       })

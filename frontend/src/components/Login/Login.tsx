@@ -3,8 +3,10 @@ import { Input } from '../ui/input.js'
 import { useNavigate } from 'react-router-dom'
 import React, { useState, FormEvent } from 'react'
 import axios, { AxiosError } from 'axios'
+import { useAuth } from '../../utils/AuthContext'
 
 export default function Login() {
+  const { login } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState('')
@@ -18,9 +20,7 @@ export default function Login() {
         password,
       })
       const { token, user } = response.data.data
-      // Store token in localStorage
-      localStorage.setItem('token', token)
-      localStorage.setItem('user', JSON.stringify(user))
+      login(token, user)
       navigate('/play')
     } catch (error) {
       if (error instanceof AxiosError) {

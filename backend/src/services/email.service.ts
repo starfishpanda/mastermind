@@ -89,7 +89,7 @@ export class EmailService {
   ): Promise<void> {
     try {
       const template = await this.getTemplate('resetPassword');
-      const resetLink = `${config.frontend.url}/reset-password?token=${resetToken}`;
+      const resetLink = `${config.frontend.url}/reset-password/${resetToken}`;
 
       const html = this.replaceTemplateVariables(template, {
         name,
@@ -97,7 +97,7 @@ export class EmailService {
       });
 
       const mailOptions = {
-        from: `"FredAbod" <${config.email.user}>`,
+        from: `"Phil Brown" <${config.email.user}>`,
         to,
         subject: 'Reset Your Password',
         html,
